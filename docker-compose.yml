@@ -1,0 +1,79 @@
+version: "3.7"
+services:
+  proxy:
+    image: "jc21/nginx-proxy-manager:latest"
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    volumes:
+      - ./proxy/data:/data
+      - ./proxy/letsencrypt:/etc/letsencrypt
+
+  redis:
+    image: redis:5-alpine
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - ./redis/data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - maternity_care_system_g44
+
+  mariadb:
+    image: mariadb:10.11   # LTS stable, matches current running container
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MARIADB_DATABASE}
+      - MYSQL_USER=${MARIADB_USER}
+      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
+    volumes:
+      - ./mariadb/data:/var/lib/mysql
+      - ./mariadb/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - maternity_care_system_g44
+
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    volumes:
+      - ./mongodb/data:/data/db
+    networks:
+      - maternity_care_system_g44
+
+  mysql-backup:
+    image: fradelg/mysql-cron-backup
+    restart: unless-stopped
+    environment:
+      - MYSQL_HOST=mariadb
+      - MYSQL_PORT=3306
+      - MYSQL_USER=${MARIADB_USER}
+      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
+      - MYSQL_DUMP_FREQ=30
+      - MYSQL_DUMP_DATABASE=${MARIADB_DATABASE}
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./mariadb/backups:/backup
+    depends_on:
+      - mariadb
+    networks:
+      - maternity_care_system_g44
+
+networks:
+  maternity_care_system_g44:
+    name: maternity_care_system_g44
+    driver: bridge

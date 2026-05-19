@@ -1,0 +1,12 @@
+.env
+
+# Runtime data
+mariadb/data/
+mariadb/backups/
+proxy/data/
+proxy/letsencrypt/
+redis/data/
+
+# Local OS/editor files
+.DS_Store
+Thumbs.db
