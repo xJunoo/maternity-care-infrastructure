@@ -40,21 +40,6 @@ services:
       - ./mariadb/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - maternity_care_system_g44
-
-  mongodb:
-    image: mongo:6
-    ports:
-      - "27017:27017"
-    restart: unless-stopped
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
-    volumes:
-      - ./mongodb/data:/data/db
-    networks:
-      - maternity_care_system_g44
-
   mysql-backup:
     image: fradelg/mysql-cron-backup
     restart: unless-stopped
