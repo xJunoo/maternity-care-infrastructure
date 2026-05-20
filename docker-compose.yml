@@ -13,7 +13,7 @@ services:
       - ./proxy/letsencrypt:/etc/letsencrypt
 
   maternity-redis:
-    image: redis:5-alpine
+    image: redis:7.2-alpine
     container_name: maternity-redis
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     volumes:

@@ -35,7 +35,7 @@ Note khi setup
 Services trong stack nay dung ten rieng de tranh trung voi container dang chay san:
 
 - `maternity-proxy`: host ports `80`, `81`, `443`
-- `maternity-redis`: host port `6379`, Docker network port `6379`
+- `maternity-redis`: Redis 7.2, host port `6379`, Docker network port `6379`
 - `maternity-mariadb`: host port `3306`, Docker network port `3306`
 - `maternity-mysql-backup`
 
