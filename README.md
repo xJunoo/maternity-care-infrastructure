@@ -30,4 +30,18 @@ docker compose up -d --build
 
 Note khi setup
 
+## Project Service Names
+
+Services trong stack nay dung ten rieng de tranh trung voi container dang chay san:
+
+- `maternity-proxy`: host ports `80`, `81`, `443`
+- `maternity-redis`: host port `6379`, Docker network port `6379`
+- `maternity-mariadb`: host port `3306`, Docker network port `3306`
+- `maternity-mysql-backup`
+
+Backend Docker container ket noi noi bo qua network:
+
+- `DB_HOST=maternity-mariadb`, `DB_PORT=3306`
+- `REDIS_HOST=maternity-redis`, `REDIS_PORT=6379`
+
 ## Hoàn thành
